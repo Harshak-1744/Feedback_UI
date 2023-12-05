@@ -29,7 +29,7 @@ export default function FeedbackForm() {
     <Card>
         <form>
           <h2>How do you Rate our Service</h2>
-          <RatingSelect />
+          <RatingSelect select={(rating) => setRating(rating)}/>
           <div className='input-group'>
             <input onChange={handleTextChange} type='text' placeholder='Write your Review' value={text}/>
             <Button type='submit' isDisabled={btnDisabled}>SEND</Button>
