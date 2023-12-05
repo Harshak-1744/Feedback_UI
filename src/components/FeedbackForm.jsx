@@ -22,13 +22,13 @@ function FeedbackForm() {
   }, [feedbackEdit])
 
   
-  const handleTextChange = ({ target: { value } }) => { // 👈  get the value
+  const handleTextChange = ({ target: { value } }) => { 
     if (value === '') {
       setBtnDisabled(true)
       setMessage(null)
       
   
-    } else if (value.trim().length < 10) { // 👈 check for less than 10
+    } else if (value.trim().length < 10) { 
       setMessage('Text must be at least 10 characters')
       setBtnDisabled(true)
     } else {
