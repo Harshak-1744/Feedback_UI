@@ -1,88 +1,88 @@
-import { useState, useContext, useEffect } from 'react'
-import RatingSelect from './RatingSelect'
-import Card from './shared/Card'
-import Button from './shared/Button'
-import FeedbackContext from '../context/FeedbackContext'
+import React, { useState, useEffect, useContext } from 'react';
 
-function FeedbackForm() {
-  const [text, setText] = useState('')
-  const [rating, setRating] = useState(10)
-  const [btnDisabled, setBtnDisabled] = useState(true)
-  const [message, setMessage] = useState('')
+import Card from './shared/Card';
+import Button from './shared/Button';
+import RatingSelect from './RatingSelect';
 
-  const { addFeedback, feedbackEdit, updateFeedback } =
-    useContext(FeedbackContext)
+import FeedbackContext from '../context/FeedbackContext';
 
-  useEffect(() => {
-    if (feedbackEdit.edit === true) {
-      setBtnDisabled(false)
-      setText(feedbackEdit.item.text)
-      setRating(feedbackEdit.item.rating)
-    }
-  }, [feedbackEdit])
+const FeedbackForm = () => {
+    const [text, setText] = useState('');
+    const [rating, setRating] = useState(10);
+    const [btnDisabled, setBtnDisabled] = useState(true);
+    const [message, setMessage] = useState('');
 
-  // NOTE: This should be checking input value not state as state won't be the updated value until the next render of the component
+    const { feedbackEdit, addFeedback, updateFeedback, cancelEditFeedback } = useContext(FeedbackContext);
 
-  // prettier-ignore
-  const handleTextChange = ({ target: { value } }) => { // 👈  get the value
-    if (value === '') {
-      setBtnDisabled(true)
-      setMessage(null)
-      
-  // prettier-ignore
-    } else if (value.trim().length < 10) { // 👈 check for less than 10
-      setMessage('Text must be at least 10 characters')
-      setBtnDisabled(true)
-    } else {
-      setMessage(null)
-      setBtnDisabled(false)
-    }
-    setText(value)
-  }
+    useEffect(() => {
+        if (feedbackEdit.edit) {
+            setText(feedbackEdit.item.text);
+            setRating(feedbackEdit.item.rating);
+            setBtnDisabled(false);
+            setMessage('');
+        }
+    }, [feedbackEdit]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    if (text.trim().length > 10) {
-      const newFeedback = {
-        text,
-        rating,
-      }
+    const handleTextChange = (e) => {
+        const newText = e.target.value.trim();
+        if (newText === '') {
+            setBtnDisabled(true);
+            setMessage(null);
+        } else if (newText.length < 10) {
+            setBtnDisabled(true);
+            setMessage('Review must be at least 10 characters.');
+        } else {
+            setBtnDisabled(false);
+            setMessage(null);
+        }
+        setText(e.target.value);
+    };
 
-      if (feedbackEdit.edit === true) {
-        updateFeedback(feedbackEdit.item.id, newFeedback)
-      } else {
-        addFeedback(newFeedback)
-      }
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (text.length >= 10) {
+            const newFeedback = { text, rating };
+            if (feedbackEdit.edit) {
+                // Update Feedback
+                updateFeedback(feedbackEdit.item.id, newFeedback);
+            } else {
+                // New Feedback
+                addFeedback(newFeedback);
+            }
+            setText('');
+            setBtnDisabled(true);
+            setMessage('');
+        }
+    };
 
-      // NOTE: reset to default state after submission
-      setBtnDisabled(true) // 👈  add this line to reset disabled
-      setRating(10) //👈 add this line to set rating back to 10
-      setText('')
-    }
-  }
+    const handleCancel = (e) => {
+        cancelEditFeedback();
+        setText('');
+        setBtnDisabled(true);
+        setMessage('');
+    };
 
-  // NOTE: pass selected to RatingSelect so we don't need local duplicate state
-  return (
-    <Card>
-      <form onSubmit={handleSubmit}>
-        <h2>How would you rate your service with us?</h2>
-        <RatingSelect select={setRating} selected={rating} />
-        <div className='input-group'>
-          <input
-            onChange={handleTextChange}
-            type='text'
-            placeholder='Write a review'
-            value={text}
-          />
-          <Button type='submit' isDisabled={btnDisabled}>
-            Send
-          </Button>
-        </div>
+    return (
+        <Card>
+            <form onSubmit={handleSubmit}>
+                <h2>How would you rate your service with us?</h2>
+                {/* @todo - rating select component */}
+                <RatingSelect select={setRating} />
+                <div className="input-group">
+                    <input value={text} onChange={handleTextChange} type="text" placeholder="Write a review" />
+                    <Button type="submit" isDisabled={btnDisabled}>
+                        {feedbackEdit.edit ? 'Update' : 'Send'}
+                    </Button>
+                    {feedbackEdit.edit && (
+                        <Button version="secondary" onClick={handleCancel}>
+                            Cancel
+                        </Button>
+                    )}
+                </div>
+                {message && <div className="message">{message}</div>}
+            </form>
+        </Card>
+    );
+};
 
-        {message && <div className='message'>{message}</div>}
-      </form>
-    </Card>
-  )
-}
-
-export default FeedbackForm
+export default FeedbackForm;

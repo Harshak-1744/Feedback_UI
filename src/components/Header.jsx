@@ -1,33 +1,36 @@
-import PropTypes from "prop-types"
-import { Link } from "react-router-dom"
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-function Header({ text, bgColor, textColor }) {
-  const headerStyles = {
-    backgroundColor: bgColor,
-    color: textColor,
-  }
-
-  return (
-    <header style={headerStyles}>
-      <div className='container'>
-        <Link to='/' style={{ textDecoration: "none", color: "#ff6a95" }}>
-          <h2>{text}</h2>
-        </Link>
-      </div>
-    </header>
-  )
-}
-
-Header.defaultProps = {
-  text: "Feedback UI",
-  bgColor: "rgba(0,0,0,0.4)",
-  textColor: "#ff6a95",
-}
+const Header = ({ text, bgColor, textColor }) => {
+    const headerStyles = {
+        backgroundColor: bgColor,
+        color: textColor,
+    };
+    const headerTextStyles = {
+        color: textColor,
+        textDecoration: 'none',
+    };
+    return (
+        <header style={headerStyles}>
+            <div className="container">
+                <Link to="/" style={headerTextStyles}>
+                    <h2>{text}</h2>
+                </Link>
+            </div>
+        </header>
+    );
+};
 
 Header.propTypes = {
-  text: PropTypes.string,
-  bgColor: PropTypes.string,
-  textColor: PropTypes.string,
-}
+    text: PropTypes.string,
+    bgColor: PropTypes.string,
+    textColor: PropTypes.string,
+};
 
-export default Header
+Header.defaultProps = {
+    text: 'Feedback UI',
+    bgColor: 'rgba(0,0,0,0.4)',
+    textColor: '#ff6a95',
+};
+
+export default Header;
