@@ -8,7 +8,8 @@ const Header = ({ text, bgColor, textColor }) => {
     };
     const headerTextStyles = {
         color: textColor,
-        textDecoration: 'none',
+        textDecoration: 'underline',
+        textUnderlineOffset: '0.4em',
     };
     return (
         <header style={headerStyles}>
