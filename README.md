@@ -9,7 +9,7 @@
 -   Section 6: Context API, useContext Hook & Deployment
 -   Section 7: APIs & HTTP Requests
 
-## Deployed
+## Deployed 
 
 -   [On Netlify](https://gabriels-react-front-to-back-04-feedback-app.netlify.app/)
 
